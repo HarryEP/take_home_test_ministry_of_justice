@@ -4,3 +4,4 @@ venv
 .coverage
 .vscode
 __pycache__
+commit.sh
