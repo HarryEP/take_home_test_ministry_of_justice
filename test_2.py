@@ -20,6 +20,9 @@
 # - distance
 # dx_number is not always returned and the "types" field can be empty.
 
+import csv
+import requests
+
 """
 [
     {
@@ -69,6 +72,44 @@
 # - the dx_number (if available) of the nearest court of the right type
 # - the distance to the nearest court of the right type
 
+
+def get_csv_data():
+
+    file_name = 'people.csv'
+    csv_data = []
+    with open(file_name, 'r') as file:
+        data = csv.reader(file)
+        next(data)
+        for row in data:
+            csv_data.append(row)
+    return csv_data
+
+
+def get_api_data(postcode):
+
+    res = requests.get(
+        f'https://courttribunalfinder.service.gov.uk/search/results.json?postcode={postcode}')
+    return res.json()
+
+
+def get_specific_court_data(name, postcode, court_type):
+    courts = get_api_data(postcode)
+    for court in courts:
+        if court_type in court["types"]:
+            return {"name": name,
+                    "home_postcode": postcode,
+                    "court_type_desired": court_type,
+                    "nearest_court": court["name"],
+                    "distance": court["distance"],
+                    "dx_number": court["dx_number"]}
+    return False
+
+
 if __name__ == "__main__":
     # [TODO]: write your answer here
-    pass
+    people = get_csv_data()
+    for person in people:
+        person_type = person[2]
+        person_postcode = person[1]
+        person_name = person[0]
+        print(get_specific_court_data(person_name, person_postcode, person_type))

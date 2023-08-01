@@ -1,3 +1,7 @@
+from datetime import datetime
+
+VALID_LOG_LEVELS = ["INFO", "TRACE", "WARNING"]
+
 # [TODO]: step 1
 # Update the is_log_line function below to skip lines that are not valid log lines.
 # Valid log lines have a timestamp, error type, and message. For example, lines 1, 3,
@@ -5,10 +9,26 @@
 # There's no perfect way to do this: just decide what you think is reasonable to get
 # the test to pass. The only thing you are not allowed to do is filter out log lines
 # based on the exact row numbers you want to remove.
+
+
 def is_log_line(line):
     """Takes a log line and returns True if it is a valid log line and returns nothing
     if it is not.
     """
+    line_segments = line.split(" ")
+    if len(line_segments) < 4:
+        return None
+    timestamp = line_segments.pop(0) + ' ' + line_segments.pop(0)
+    log_level = line_segments.pop(0)
+    message = ' '.join(line_segments).lstrip()
+    try:
+        timestamp = datetime.strptime(timestamp, '%d/%m/%y %H:%M:%S')
+    except:
+        return None
+    if log_level not in VALID_LOG_LEVELS:
+        return None
+    if message != '':
+        return None
     return True
 
 
@@ -21,7 +41,15 @@ def get_dict(line):
     """Takes a log line and returns a dict with
     `timestamp`, `log_level`, `message` keys
     """
-    pass
+    line_segments = line.split(" ")
+    timestamp = line_segments.pop(0) + ' ' + line_segments.pop(0)
+    log_level = line_segments.pop(0)
+    message = ' '.join(line_segments).lstrip()
+    if message[-1] == '\n':
+        message = message[:-1]
+    return {"timestamp": timestamp,
+            "log_level": log_level,
+            "message": message}
 
 
 # YOU DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE

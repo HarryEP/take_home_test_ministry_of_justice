@@ -6,5 +6,18 @@
 # [TODO]: fix the function
 def sum_current_time(time_str: str) -> int:
     """Expects data in the format HH:MM:SS"""
-    list_of_nums = time_str.split(":")
-    return sum(list_of_nums)
+    valid_input = check_valid_input(time_str)
+    if valid_input:
+        sum_of_nums = 0
+        list_of_nums = time_str.split(":")
+        for num in list_of_nums:
+            sum_of_nums += int(num)
+        return sum_of_nums
+
+
+def check_valid_input(time_str):
+    if not isinstance(time_str, str):
+        raise TypeError
+    if time_str.count(':') != 2:
+        raise ValueError
+    return True
