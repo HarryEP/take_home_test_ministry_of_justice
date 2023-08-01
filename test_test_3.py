@@ -27,3 +27,21 @@ def test_invalid_time_format_colons():
     invalid_time = '05:43'
     with pytest.raises(ValueError):
         check_valid_input(invalid_time)
+
+
+def test_wrong_string_size_raises_value_error():
+    invalid_time = "20:30:10.00"
+    with pytest.raises(ValueError):
+        check_valid_input(invalid_time)
+
+
+def test_too_big_an_input_raises_value_error():
+    invalid_time = "99:99:99"
+    with pytest.raises(ValueError):
+        check_valid_input(invalid_time)
+
+
+def test_not_integers_inputed_raises_value_error():
+    invalid_time = "HA:ha:HA"
+    with pytest.raises(ValueError):
+        check_valid_input(invalid_time)
